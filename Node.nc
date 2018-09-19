@@ -13,7 +13,7 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
-/*
+/* made a struct so that we can count our neighbors */
 typedef nx_struct NeighborCount {
 nx_uint16_t Location;
 nx_uint_t Age;
@@ -29,7 +29,8 @@ module Node{
 
    uses interface CommandHandler;
 
-    /*
+    /*include all the processes from the lab proj 1 slide */
+ uses
 }
 
 implementation{
