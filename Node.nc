@@ -64,10 +64,10 @@ uint16_t replysequence = 0;
       dbg(GENERAL_CHANNEL, "Packet Received\n");
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-if(TOS_Node_ID == myMsg -> dest){
+if(TOS_NODE_ID == myMsg -> dest){
 //check if protocol is ping if true
 if (PROTOCOL_PING == true) {
-makePack(&sendPackage, src->myMsg, dest->myMsg, 0, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
+makePack(&sendPackage, myMsg->dest, myMsg->src, 0, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 }
 // make pack (src->dest,dest->src, 1)
