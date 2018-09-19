@@ -65,7 +65,7 @@ uint16_t replysequence = 0;
          pack* myMsg=(pack*) payload;
 if(TOS_NODE_ID == myMsg -> dest){
 //check if protocol is ping if true
-if (PROTOCOL_PING == True) {
+if (PROTOCOL_PING == TRUE) {
 makePack(&sendPackage, myMsg->dest, myMsg->src, 0, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 }
