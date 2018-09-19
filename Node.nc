@@ -13,6 +13,12 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 
+/*
+typedef nx_struct NeighborCount {
+nx_uint16_t Location;
+nx_uint_t Age;
+}
+
 module Node{
    uses interface Boot;
 
@@ -22,6 +28,8 @@ module Node{
    uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
+
+    /*
 }
 
 implementation{
