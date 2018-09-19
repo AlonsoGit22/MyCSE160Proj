@@ -64,47 +64,31 @@ uint16_t replysequence = 0;
       dbg(GENERAL_CHANNEL, "Packet Received\n");
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-
-    /* new code  seeing if the TTL is 0 if it is drop the packet*/
-if (myMsg -> TTL == 0){
+if(TOS_Node_ID == myMsg -> dest){
+//check if protocol is ping if true
+if (PROTOCOL_PING == true) {
+makePack(&sendPackage, src->myMsg, dest->myMsg, 0, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
+}
+// make pack (src->dest,dest->src, 1)
+dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 return msg;
-}
-elseif (myMsg -> TTL != 0 && myMsg ->protocol == PROTOCOL_PING) {
-
-if (myMsg->protocol == Protocol_PING){
-dbg(GENERAL_CHANNEL, "Recived Packet From Node: %d at Node : %d\n\n", myMsg->src,TOS_NODE_ID);
-dbg(FLOODING_CHANNEL, "Packet recieved at Node: %d and Mmeant or Node: %d\n\n", TOS_NODE_ID, myMsg->dest);
+}else{
+makePack(&sendPackage, myMsg->src, myMsg->dest, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 }
 
-}
-         dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-         return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
    }
-/* add to Queue List */
-call NeighborQueueList.pushback(myMsg);
-/*checking if the msg has gotten to the correct destination */
-if(TOS_NODE_ID == myMsg->dest) {
-dbg(FLOODING_CHANNEL, "Packet has arrived at destination: %d from %d \n\n", myMsg->dest, myMsg-src);
 
-}
-/*If the packat is not a repeat */
-elseif(TOS_NODE_ID != myMsg-> && myMsg->protocol == PROTOOL_PING){
 
-/* Foward a new paket to the next node */
-
-makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL -1, PROTOCOL_PING,sequence,(uint8_t)payload,sizeof(myMsg->payload));
-call Sender.send(replyPackage,AM_BROADCAST_ADDR);
-
-}
 
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-      call Sender.send(sendPackage, destination);
+      call Sender.send(sendPackage, AM_BROADCAST_ADDR);
    }
 
    event void CommandHandler.printNeighbors(){}
