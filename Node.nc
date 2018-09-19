@@ -33,11 +33,11 @@ uses interface RandomC as Random;
 
 implementation{
    pack sendPackage;
-
-/* M make sequence counter */
 uint16_t sequenceCount = 1;
 unit16_t sequence = 0;
 uint16_t replysequence = 0;
+/* M make sequence counter */
+
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
