@@ -33,6 +33,6 @@ implementation {
 
 
 components new ListC(pack, 21) as ListC;
-Node.list -> ListC;
+Node.List -> ListC;
 
 }
