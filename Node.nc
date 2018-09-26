@@ -28,7 +28,8 @@ uses interface List<pack> as List;
 }
 
 implementation{
-uint 16_t seqenceCounter = 0;
+
+uint16_t seqenceCounter = 0;
    pack sendPackage;
 
 

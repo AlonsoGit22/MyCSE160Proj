@@ -32,7 +32,7 @@ implementation {
     Node.CommandHandler -> CommandHandlerC;
 
 
-
+components new ListC(pack, 21) as listC;
 Node.list -> ListC;
 
 }
