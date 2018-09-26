@@ -32,29 +32,7 @@ implementation {
     Node.CommandHandler -> CommandHandlerC;
 
 
-    /* new code */
-        /* new list for where the neighbors are located in relation to their order */
-    components new ListC(uint16_t, 20) as NeighborQueueListC;
 
-    /* new list neighbors we know about */
-    components new PoolC(uint16_t, 20) as PoolC;
-
-    /* Random CSMA binary push back */
-    components RandomC as Random;
-
-    /* Timer components for timing */
-    components new TimerMilliC() as NodeTimer;
-
-    /* Tracking the sends to all the nodes */
-    components new AMSenderC(AM_Pack);
-
-    /* pointers from the Node file to the storage found in NodeC.nc) */
-    Node.NeighborQueueList -> NeighborQueueListC;
-    Node.NeighborPool -> NeighborPoolC;
-    Node.Random -> RandomC;
-    Node.NodeTimer -> NodeTimer;
-    Node.AMSend -> AMSender
-
-
+Node.list -> ListC;
 
 }

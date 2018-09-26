@@ -24,19 +24,13 @@ module Node{
 
    uses interface CommandHandler;
 
-    /*include all the processes from the lab proj 1 slide */
-uses interface NeighborQueueListC<uint16_t> as NeighborQueueList;
-uses interface PoolC<uint16_t> as NeighborPool;
-uses interface TimerMilliC as NodeTimer;
-uses interface RandomC as Random;
+uses interface List<pack> as List;
 }
 
 implementation{
+uint 16_t seqenceCounter = 0;
    pack sendPackage;
-uint16_t sequenceCount = 1;
-unit16_t sequence = 0;
-uint16_t replysequence = 0;
-/* M make sequence counter */
+
 
 
    // Prototypes
