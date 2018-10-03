@@ -129,7 +129,11 @@ class TestSim:
         print 'Adding Channel', channelName;
         self.t.addChannel(channelName, out);
 
+    def printNeighbors(self, source):
+        self.sendCMD(4, source, "printing command")
+
 def main():
+    print "test"
     s = TestSim();
     s.runTime(10);
     s.loadTopo("long_line.topo");
@@ -137,13 +141,14 @@ def main():
     s.bootAll();
     s.addChannel(s.COMMAND_CHANNEL);
     s.addChannel(s.GENERAL_CHANNEL);
-    s.addChannel(s.FLOODING_CHANNEL);  # added FLOODING_CHANNEL
-    s.addChannel(s.NEIGHBOR_CHANNEL);  # added NEIGHBOR_CHANNEL
+    #s.addChannel(s.FLOODING_CHANNEL);
+    s.addChannel(s.NEIGHBOR_CHANNEL);
 
     s.runTime(20);
     s.ping(1, 2, "Hello, World");
+    
     s.runTime(10);
-    s.ping(1, 3, "Hi!");
+    s.ping(14, 5, "Hi!");
     s.runTime(20);
 
 if __name__ == '__main__':

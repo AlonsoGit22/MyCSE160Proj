@@ -20,73 +20,152 @@ module Node{
    uses interface SplitControl as AMControl;
    uses interface Receive;
 
-   uses interface SimpleSend as Sender;
+   uses interface SimpleSend as Sender;     // renames the nc file to sender 
 
    uses interface CommandHandler;
-
-uses interface List<pack> as List;
+   uses interface List<uint16_t> as Neighbors;
+   uses interface List<pack> as Packets;
+   uses interface Timer<TMilli> as periodicTimer;
 }
 
 implementation{
-
-uint16_t seqenceCounter = 0;
    pack sendPackage;
-
-
+   uint16_t sequence = 0;
 
    // Prototypes
+
+    
+    
+
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+
+   void discoverNeighbors(){
+        //uint16_t tTol = 1;
+        makePack(&sendPackage, TOS_NODE_ID, TOS_NODE_ID, 1, PROTOCOL_PING, sequence++, "HI NEIGHBOR", PACKET_MAX_PAYLOAD_SIZE);
+        call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+        CommandHandler.printNeighbors;
+   }
+   event void periodicTimer.fired(){
+       //ping(TOS_NODE_ID, "NEIGHBOR SEARCH");
+        discoverNeighbors();
+        //dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+        CommandHandler.printNeighbors;
+        //dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+        
+    }
 
    event void Boot.booted(){
       call AMControl.start();
+      call periodicTimer.startPeriodic(5000);
 
-      dbg(GENERAL_CHANNEL, "Booted\n");
+      
+      //dbg(GENERAL_CHANNEL, "Booted\n");
    }
 
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
-         dbg(GENERAL_CHANNEL, "Radio On\n");
+         //dbg(GENERAL_CHANNEL, "Radio On\n");
       }else{
          //Retry until successful
          call AMControl.start();
       }
    }
 
-   event void AMControl.stopDone(error_t err){}
-
-   event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      dbg(GENERAL_CHANNEL, "Packet Received\n");
-      if(len==sizeof(pack)){
-         pack* myMsg=(pack*) payload;
-if(TOS_NODE_ID == myMsg -> dest){
-//check if protocol is ping if true
-if (PROTOCOL_PING == TRUE) {
-makePack(&sendPackage, myMsg->dest, myMsg->src, 0, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
-call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-}
-// make pack (src->dest,dest->src, 1)
-dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-return msg;
-}else{
-makePack(&sendPackage, myMsg->src, myMsg->dest, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-}
-
-      }
-      dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
-      return msg;
+   bool isDuplicate(uint16_t from, pack newPack){
+       
+       uint16_t i;
+       uint16_t max = call Packets.size();
+       for (i = 0; i < max;i++){
+           pack oldPack = call Packets.get(i);
+            if (oldPack.src == newPack.src && oldPack.seq == newPack.seq){
+            //dbg(FLOODING_CHANNEL, "Packet is duplicate so its dropped\n");
+            return TRUE;
+            }
+       }
+    return FALSE;
    }
 
+   
 
+   event void AMControl.stopDone(error_t err){}
+
+   event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){   //name implies
+
+        if(len==sizeof(pack)){
+            pack* myMsg=(pack*) payload;
+            // dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+            if (myMsg -> TTL == 0){
+                //dbg(FLOODING_CHANNEL, "Packet Dropped due to TTL at 0\n");
+                return msg;
+            }
+            else if (myMsg -> dest != TOS_NODE_ID){
+                if (isDuplicate(myMsg -> src, *myMsg) == TRUE)
+                    return msg;
+                else if (myMsg -> src == myMsg -> dest){
+                    int has = 0, i = 0;
+                    for (i = 0; i < call Neighbors.size(); i++){
+                        int temp = call Neighbors.get(i);
+                        if (temp == myMsg -> src)
+                            has++;
+                    }
+                    if (has == 0)
+                        call Neighbors.pushback(myMsg -> src);
+                    //CommandHandler.printNeighbors;
+                    //dbg(NEIGHBOR_CHANNEL,"test\n");
+                    //dbg(NEIGHBOR_CHANNEL, "we got a neighbor\n");
+                }
+                call Packets.pushback(*myMsg);
+                
+                myMsg -> TTL -= 1;                
+                dbg(FLOODING_CHANNEL, "Packet Received from %d, flooding\n", myMsg->src);
+                
+                call Sender.send(*myMsg, AM_BROADCAST_ADDR);
+            }
+            //else if (myMsg -> dest == 0){
+            //    call Neighbors.pushback(myMsg -> src);
+            //    makePack(&sendPackage, TOS_NODE_ID, 0, MAX_TTL, PROTOCOL_PINGREPLY, sequence++, "Howdy Neighbor!", PACKET_MAX_PAYLOAD_SIZE);
+                
+            //    call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+            //}
+        
+            else if (myMsg -> protocol == PROTOCOL_PINGREPLY && myMsg -> dest == TOS_NODE_ID){
+                dbg(GENERAL_CHANNEL, "Packet Recieved: %s\n", myMsg -> payload);
+            }
+            else { // myMsg -> dest == TOS_NODE_ID
+                dbg(GENERAL_CHANNEL, "Packet Recieved: %s\n", myMsg -> payload);
+                call Packets.pushback(*myMsg);
+                makePack(&sendPackage, TOS_NODE_ID, myMsg -> src, MAX_TTL, PROTOCOL_PINGREPLY, sequence++, "Thank You.", PACKET_MAX_PAYLOAD_SIZE);
+                call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+            }
+            return msg;
+        }
+        dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
+        return msg;
+   }
 
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-      dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+      dbg(GENERAL_CHANNEL, "PING EVENT \n"); 
+      makePack(&sendPackage, TOS_NODE_ID, destination, MAX_TTL, PROTOCOL_PING, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+      call Packets.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
    }
+   
+   
 
-   event void CommandHandler.printNeighbors(){}
+   event void CommandHandler.printNeighbors(){
+       
+       uint16_t i = 0;
+       uint16_t max = call Neighbors.size();   
+       
+       for(i = 0; i < max;i++){
+           dbg(NEIGHBOR_CHANNEL,"i am printing\n");
+           //uint16_t Neighbor = call Neighbors.get(i);
+           //printf('%s', Neighbor);
+           //dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+
+       }
+   }
 
    event void CommandHandler.printRouteTable(){}
 
@@ -96,7 +175,14 @@ call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 
    event void CommandHandler.setTestServer(){}
 
-   event void CommandHandler.setTestClient(){}
+   event void CommandHandler.setTestClient(){
+       int i;
+       int max = call Neighbors.size();
+       dbg(NEIGHBOR_CHANNEL, "I am node %u. my neighbors are:\n", TOS_NODE_ID);
+       for(i = 0; i < max; i++){
+           dbg(NEIGHBOR_CHANNEL, "%u\n", call Neighbors.get(i));
+       }
+   }
 
    event void CommandHandler.setAppServer(){}
 
@@ -110,4 +196,5 @@ call Sender.send(sendPackage, AM_BROADCAST_ADDR);
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
+   
 }

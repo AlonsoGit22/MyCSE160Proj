@@ -17,6 +17,14 @@ implementation {
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
+    components new ListC(pack, 64);
+    components new ListC(uint16_t, 64) as Neighbors;
+    components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
+    Node.Boot -> MainC.Boot;
+    Node.periodicTimer -> myTimerC; //Wire the interface to the component
+
+    Node.Neighbors -> Neighbors;
+    Node.Packets -> ListC;
 
     Node -> MainC.Boot;
 
@@ -30,9 +38,4 @@ implementation {
 
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
-
-
-components new ListC(pack, 21) as ListC;
-Node.List -> ListC;
-
 }
