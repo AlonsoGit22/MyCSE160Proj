@@ -12,7 +12,8 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-
+#define MAX_ROUTES 128
+#define MAX_TTL 120
 
 module Node{
    uses interface Boot;
@@ -33,7 +34,55 @@ implementation{
    uint16_t sequence = 0;
 
    // Prototypes
+    struct routingTable {
+        int dest;
+        int NextHop;
+        int cost;
+        int src;
+        unsigned short TTL;
+    }Route;
 
+int numRoutes = 0;
+Route routingTable[MAX_Route];
+
+    void mergeRoute (Route *new){//updates the local table of a node
+        int i= src;
+        for(i = 0; i < numRoutes; ++i){
+            if(new -> dest == routingTable[i].dest){
+                if( new -> cost + 1 < routingTable[i].cost){
+                    break;
+                }else if(new -> NextHop == routingTable[i].NextHop){ // possible change to the metric of the nextHop
+                    break;
+                }else{ // the route was not the best so just ignore it
+                    return;
+                }
+            }
+        }
+        if( i == numRoutes){
+            if( numRoutes < MAX_Route){
+                ++numRoutes;
+            }else{ // cant fit the route into the table
+                return;
+            }
+        }
+        routingTable[i] = *new;
+        routingTable[i].TTL = MAX_TTL; // reset TTL because route was added
+        ++routingTable[i].cost;
+    }
+
+    void updateRoutingTable (Route *newRoute, int numNewRoute){ //updates the table with the new routes from the node
+        int i;
+        for( i = 0; i < numRoutes; ++i){
+            mergeRoute(&newRoute[i]);
+        }
+    }
+    
+struct fowardingTable {
+    int dest;
+int NextHop;
+int cost
+unsigned short TTL;
+}
     
     
 
@@ -167,7 +216,15 @@ implementation{
        }
    }
 
-   event void CommandHandler.printRouteTable(){}
+   event void CommandHandler.printRouteTable(){
+       uint16_t i = 0;
+       uint16_t max = call Neighbor.size();
+       
+       for(i = 0; i < max; i++){
+       dbg(ROUTING_CHANNEL, "Routing Table \n");
+        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
+           dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
+   }
 
    event void CommandHandler.printLinkState(){}
 
