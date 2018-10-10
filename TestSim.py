@@ -151,7 +151,7 @@ def main():
     s.ping(14, 5, "Hi!");
     s.runTime(20);
     s.routeDMP(5);
-    s.runTime(25);
+    s.runTime(20);
     s.neighborDMP(1);
     s.runTime(26);
 if __name__ == '__main__':
