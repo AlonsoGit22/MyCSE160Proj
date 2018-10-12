@@ -45,7 +45,7 @@ implementation{
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
-    void mergeRoute (Route *new Route){//updates the local table of a node
+    void mergeRoute (Route *new){//updates the local table of a node
         int i;
         for(i = 0; i < numRoutes; ++i){
             if(new -> dest == routingTable[i].dest){
