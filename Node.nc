@@ -197,7 +197,7 @@ struct fowardingTable {
        // dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    }
-
+   }
    event void CommandHandler.printLinkState(){}
 
    event void CommandHandler.printDistanceVector(){}
