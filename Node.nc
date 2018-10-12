@@ -12,7 +12,6 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#include <new>
 #define MAX_ROUTES 128
 #define MAX_TTL 120
 
@@ -46,8 +45,7 @@ implementation{
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
-    void
-    mergeRoute (Route *new)
+    void mergeRoute()
     {
         int i;
         for (i = 0; i < numRoutes; ++i)
