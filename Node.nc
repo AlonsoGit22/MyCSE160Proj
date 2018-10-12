@@ -34,19 +34,19 @@ implementation{
    uint16_t sequence = 0;
 
    // Prototypes
-    struct routingTable {
+    struct rTable{
         int dest;
         int NextHop;
         int cost;
-        int src;
+        //int src;
         unsigned short TTL;
     }Route;
 
-int numRoutes = 0;
-Route routingTable[MAX_Route];
+    int numRoutes = 0;
+    Route routingTable[MAX_Route];
 
     void mergeRoute (Route *new){//updates the local table of a node
-        int i= src;
+        int i;
         for(i = 0; i < numRoutes; ++i){
             if(new -> dest == routingTable[i].dest){
                 if( new -> cost + 1 < routingTable[i].cost){
