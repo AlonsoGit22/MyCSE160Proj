@@ -45,13 +45,13 @@ implementation{
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
-    void mergeRoute (struct Route *new){//updates the local table of a node
+    void mergeRoute (struct Route *routes){//updates the local table of a node
        int i;
         for(i = 0; i < numRoutes; ++i){
-            if(new -> dest == routingTable[i].dest){
-                if( new -> cost + 1 < routingTable[i].cost){
+            if(routes -> dest == routingTable[i].dest){
+                if( routes -> cost + 1 < routingTable[i].cost){
                     break;
-                }else if(new -> NextHop == routingTable[i].NextHop){ // possible change to the metric of the nextHop
+                }else if(routes -> NextHop == routingTable[i].NextHop){ // possible change to the metric of the nextHop
                     break;
                 }else{ // the route was not the best so just ignore it
                     return;
@@ -65,7 +65,7 @@ implementation{
                 return;
             }
         }
-        routingTable[i] = *new;
+        routingTable[i] = *routes;
         routingTable[i].TTL = MAX_TTL; // reset TTL because route was added
         ++routingTable[i].cost;
     }
