@@ -40,12 +40,13 @@ implementation{
         int cost;
         //int src;
         unsigned short TTL;
-    } Route;
+    };
+    routingTable Route;
     
     int numRoutes = 0;
     Route routingTable[MAX_Route];
 
-    void mergeRoute (Route *new){//updates the local table of a node
+    void mergeRoute (Route* r = new Route){//updates the local table of a node
         int i;
         for(i = 0; i < numRoutes; ++i){
             if(new -> dest == routingTable[i].dest){
