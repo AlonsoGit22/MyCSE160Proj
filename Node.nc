@@ -33,7 +33,7 @@ implementation{
    pack sendPackage;
    uint16_t sequence = 0;
 
-   // Prototypes
+
     typedef struct Route {
         int dest;
         int NextHop;
@@ -45,7 +45,55 @@ implementation{
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
-    
+    void
+    mergeRoute (Route *new)
+    {
+        int i;
+        for (i = 0; i < numRoutes; ++i)
+        {
+            if (new->Destination == routingTable[i].Destination)
+            {
+                if (new->Cost + 1 < routingTable[i].Cost)
+                {
+                    /* found a better route: */
+                    break;
+                } else if (new->NextHop == routingTable[i].NextHop) {
+                  
+                } }
+            /* metric for current next-hop may have
+             changed: */
+            break;
+        } else {
+            /* route is uninteresting---just ignore
+             it */
+            return; }
+        if (i == numRoutes)
+        {
+            /* this is a completely new route; is there room
+             for it? */
+            if (numRoutes < MAXROUTES)
+            {
+                ++numRoutes;
+            } else {
+                /* can't fit this route in table so give up */
+                return; }
+        }
+        routingTable[i] = *new;
+        /* reset TTL */
+        routingTable[i].TTL = MAX_TTL;
+        /* account for hop to get to next node */
+        ++routingTable[i].Cost;
+    }
+  
+    void
+    updateRoutingTable (Route *newRoute, int numNewRoutes)
+    {
+        int i;
+        for (i=0; i < numNewRoutes; ++i)
+        {
+            mergeRoute(&newRoute[i]);
+        }
+    }
     
 struct fowardingTable {
     int dest;
@@ -188,14 +236,15 @@ struct fowardingTable {
 
    event void CommandHandler.printRouteTable(){
        uint16_t i = 0;
-       //uint16_t max = call Neighbor.size();
+       uint16_t max = 255;
         dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-       //dbg(ROUTING_CHANNEL, "max %d:\n" , max);
-      // for(i = 0; i < max; i++){
-         // dbg(ROUTING_CHANNEL, "hi");
+        dbg(ROUTING_CHANNEL, "max %d:\n" , max);
+       for(i = 0; i < max; i++){
+         dbg(ROUTING_CHANNEL, "hi");
        //dbg(ROUTING_CHANNEL, "Routing Table \n");
        // dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
+   }
    }
    
    event void CommandHandler.printLinkState(){}
