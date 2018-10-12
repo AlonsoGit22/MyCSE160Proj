@@ -12,6 +12,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+#include <new>
 #define MAX_ROUTES 128
 #define MAX_TTL 120
 
