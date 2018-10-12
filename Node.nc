@@ -34,14 +34,14 @@ implementation{
    uint16_t sequence = 0;
 
    // Prototypes
-    struct rTable{
+    struct routingTable{
         int dest;
         int NextHop;
         int cost;
         //int src;
         unsigned short TTL;
-    }Route;
-
+    } Route;
+    
     int numRoutes = 0;
     Route routingTable[MAX_Route];
 
