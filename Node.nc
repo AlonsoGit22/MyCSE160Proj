@@ -59,7 +59,7 @@ implementation{
             }
         }
         if( i == numRoutes){
-            if( numRoutes < MAX_Route){
+            if( numRoutes < MAX_ROUTES){
                 ++numRoutes;
             }else{ // cant fit the route into the table
                 return;
@@ -79,10 +79,10 @@ implementation{
     
 struct fowardingTable {
     int dest;
-int NextHop;
-int cost
-unsigned short TTL;
-}
+    int NextHop;
+    int cost;
+    unsigned short TTL;
+};
     
     
 
