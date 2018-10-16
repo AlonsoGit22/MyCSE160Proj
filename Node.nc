@@ -35,31 +35,30 @@ implementation{
 
 
     typedef struct Route {
-        int dest;
-        int NextHop;
-        int cost;
+        unit16_t dest;
+        uint16_t NextHop;
+        unit16_t cost;
         //int src;
-        unsigned short TTL;
+        unint8_t TTL;
     } Route;
 
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
-    void mergeRoute()
-    {
+    void mergeRoute(Route *routes){
         int i;
         for (i = 0; i < numRoutes; ++i)
         {
-            if (new->Destination == routingTable[i].Destination)
+            if (routes->dest == routingTable[i].dest)
             {
-                if (new->Cost + 1 < routingTable[i].Cost)
+                if (routes->cost + 1 < routingTable[i].cost)
                 {
-                    /* found a better route: */
+                    routingTable[i].cost = routes->cost + 1;
                     break;
-                } else if (new->NextHop == routingTable[i].NextHop) {
+                } else if (routes->NextHop == routingTable[i].NextHop) {
                   
-                } }
-            /* metric for current next-hop may have
+                }
+            }/* metric for current next-hop may have
              changed: */
             break;
         } else {
@@ -77,7 +76,7 @@ implementation{
                 /* can't fit this route in table so give up */
                 return; }
         }
-        routingTable[i] = *new;
+        routingTable[i] = *route;
         /* reset TTL */
         routingTable[i].TTL = MAX_TTL;
         /* account for hop to get to next node */
@@ -95,11 +94,12 @@ implementation{
     }
     
 struct fowardingTable {
-    int dest;
-    int NextHop;
-    int cost;
-    unsigned short TTL;
+    uint16_t dest;
+    uint16_t NextHop;
+    uint16_t cost;
+    uint8_t short TTL;
 };
+    
     
     
 
@@ -236,13 +236,13 @@ struct fowardingTable {
    event void CommandHandler.printRouteTable(){
        uint16_t i = 0;
        uint16_t max = 255;
-        dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-        dbg(ROUTING_CHANNEL, "max %d:\n" , max);
+       // dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
+        //dbg(ROUTING_CHANNEL, "max %d:\n" , max);
        for(i = 0; i < max; i++){
-         dbg(ROUTING_CHANNEL, "hi");
-       //dbg(ROUTING_CHANNEL, "Routing Table \n");
-       // dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
-        //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
+         //dbg(ROUTING_CHANNEL, "hi");
+       dbg(ROUTING_CHANNEL, "Routing Table \n");
+       dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
+        dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    }
    }
    
