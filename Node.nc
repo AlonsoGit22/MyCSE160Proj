@@ -35,8 +35,8 @@ implementation{
 
     typedef nx_struct Route{
         nx_uint16_t dest;
-        nx_uint16_t src;
-        nx_uint16_t seq;        //Sequence Number
+        nx_uint16_t NextHop;
+        nx_uint16_t cost;        //Sequence Number
         nx_uint8_t TTL;        //Time to Live
        // nx_uint8_t protocol;
         //nx_uint8_t payload[PACKET_MAX_PAYLOAD_SIZE];
@@ -94,12 +94,12 @@ implementation{
     }
     
 struct fowardingTable {
-    uint16_t dest;
-    uint16_t NextHop;
-    uint16_t cost;
-    uint8_t short TTL;
+    nx_uint16_t dest;
+    nx_uint16_t NextHop;
+    nx_uint16_t cost;        //Sequence Number
+    nx_uint8_t TTL;
 };
-    
+
     
     
 
