@@ -60,7 +60,6 @@ implementation{
                 }
             }/* metric for current next-hop may have
              changed: */
-            break;
         } else {
             /* route is uninteresting---just ignore
              it */
