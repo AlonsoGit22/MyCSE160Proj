@@ -44,18 +44,28 @@ implementation{
     
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
+    
+    void
+    updateRoutingTable (Route *newRoute, int numNewRoutes)
+    {
+        int i;
+        for (i=0; i < numNewRoutes; ++i)
+        {
+            mergeRoute(&newRoute[i]);
+        }
+    }
 
-    void mergeRoute(Route *routes){
+    void mergeRoute(Route *new){
         int i;
         for (i = 0; i < numRoutes; ++i)
         {
-            if (routes->dest == routingTable[i].dest)
+            if (new->dest == routingTable[i].dest)
             {
-                if (routes->cost + 1 < routingTable[i].cost)
+                if (new->cost + 1 < routingTable[i].cost)
                 {
                     routingTable[i].cost = routes->cost + 1;
                     break;
-                } else if (routes->NextHop == routingTable[i].NextHop) {
+                } else if (new->NextHop == routingTable[i].NextHop) {
                   
                 }
             }/* metric for current next-hop may have
@@ -81,16 +91,6 @@ implementation{
         routingTable[i].TTL = MAX_TTL;
         /* account for hop to get to next node */
         ++routingTable[i].Cost;
-    }
-  
-    void
-    updateRoutingTable (Route *newRoute, int numNewRoutes)
-    {
-        int i;
-        for (i=0; i < numNewRoutes; ++i)
-        {
-            mergeRoute(&newRoute[i]);
-        }
     }
     
 struct fowardingTable {
