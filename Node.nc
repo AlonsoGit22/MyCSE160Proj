@@ -33,15 +33,15 @@ implementation{
    pack sendPackage;
    uint16_t sequence = 0;
 
-
-    typedef struct Route {
-        nx_unit16_t dest;
-        nx_uint16_t NextHop;
-        nx_unit16_t cost;
-        //int src;
-        nx_unint8_t TTL;
-    } Route;
-
+    typedef nx_struct Route{
+        nx_uint16_t dest;
+        nx_uint16_t src;
+        nx_uint16_t seq;        //Sequence Number
+        nx_uint8_t TTL;        //Time to Live
+       // nx_uint8_t protocol;
+        //nx_uint8_t payload[PACKET_MAX_PAYLOAD_SIZE];
+    }Route;
+    
     int numRoutes = 0;
     Route routingTable[MAX_ROUTES];
 
