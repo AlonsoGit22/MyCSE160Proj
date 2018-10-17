@@ -54,12 +54,10 @@ implementation{
                 if (route->cost + 1 < routingTable[i].cost)
                 {
                     routingTable[i].cost = route->cost + 1;
-                    break;
                 } else if (route->NextHop == routingTable[i].NextHop) {
                   
                 }
-            }/* metric for current next-hop may have
-             changed: */
+            }
         } else {
             /* route is uninteresting---just ignore
              it */
