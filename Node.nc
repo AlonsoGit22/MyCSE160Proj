@@ -35,11 +35,11 @@ implementation{
 
 
     typedef struct Route {
-        unit16_t dest;
-        uint16_t NextHop;
-        unit16_t cost;
+        nx_unit16_t dest;
+        nx_uint16_t NextHop;
+        nx_unit16_t cost;
         //int src;
-        unint8_t TTL;
+        nx_unint8_t TTL;
     } Route;
 
     int numRoutes = 0;
@@ -226,9 +226,9 @@ struct fowardingTable {
        
        for(i = 0; i < max;i++){
            dbg(NEIGHBOR_CHANNEL,"i am printing\n");
-           //uint16_t Neighbor = call Neighbors.get(i);
-           //printf('%s', Neighbor);
-           //dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+           uint16_t Neighbor = call Neighbors.get(i);
+           printf('%s', Neighbor);
+           dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
 
        }
    }
@@ -237,11 +237,12 @@ struct fowardingTable {
        uint16_t i = 0;
        uint16_t max = 255;
        // dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-        //dbg(ROUTING_CHANNEL, "max %d:\n" , max);
-       for(i = 0; i < max; i++){
-         //dbg(ROUTING_CHANNEL, "hi");
+       //dbg(ROUTING_CHANNEL, "max %d:\n" , max);  dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
+       for(i = 0; i < max; i++){
+         //dbg(ROUTING_CHANNEL, "hi");
+     
         dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    }
    }
