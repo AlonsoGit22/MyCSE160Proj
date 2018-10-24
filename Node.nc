@@ -121,7 +121,7 @@ implementation{
         
         initTable();
         
-        memcpy(currentRoute, newPack.payload, sizeof(newRoute));
+       // memcpy(currentRoute, newPack.payload, sizeof(newRoute));
        // memcpy(newRoute, RoutingTables[TOS_NODE_ID - 1].rTable, sizeof(currentRoute));
         for (i = 0; i < 19;  i++) {
             if (currentRoute[i][0] == newRoute[i][0]); {
