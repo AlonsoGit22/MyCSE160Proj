@@ -12,8 +12,8 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#define MAX_ROUTES 128
-#define MAX_TTL 120
+//#define MAX_ROUTES 128
+//#define MAX_TTL 120
 
 
 typedef nx_struct RoutingTable {
@@ -36,17 +36,12 @@ module Node{
 }
 
 implementation{
+    pack sendPackage;
     uint16_t SENTINEL = 65535;
     uint16_t sequence = 0;
     uint8_t neighborDiscovered = 0;
     
-    DVtable RoutingTables[20];
-    
-    
-    // Prototypes
-    
-    
-    
+    RoutingTable RoutingTables[20];
     
     void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
     void printTable() {
@@ -180,11 +175,14 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
       call periodicTimer.startPeriodic(5000);
-
+       call DVRTIMER.startPeriodic(5000);
       
       //dbg(GENERAL_CHANNEL, "Booted\n");
    }
-
+    event void DVRTimer.fired() {
+        sendDVRTable();
+    }
+    
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
          //dbg(GENERAL_CHANNEL, "Radio On\n");
@@ -291,16 +289,16 @@ implementation{
    }
 
    event void CommandHandler.printRouteTable(){
-       uint16_t i = 0;
-       uint16_t max = 255;
+       //uint16_t i = 0;
+       //uint16_t max = 255;
        // dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
        //dbg(ROUTING_CHANNEL, "max %d:\n" , max);  dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
-       for(i = 0; i < max; i++){
+       //for(i = 0; i < max; i++){
          //dbg(ROUTING_CHANNEL, "hi");
      
-        dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
+        //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    }
    }
    

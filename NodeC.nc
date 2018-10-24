@@ -20,9 +20,11 @@ implementation {
     components new ListC(pack, 64);
     components new ListC(uint16_t, 64) as Neighbors;
     components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
+    components new TimerMilliC() as dvrTimerC;
+
     Node.Boot -> MainC.Boot;
     Node.periodicTimer -> myTimerC; //Wire the interface to the component
-
+    Node.DVRTimer -> dvrTimerC;
     Node.Neighbors -> Neighbors;
     Node.Packets -> ListC;
 
