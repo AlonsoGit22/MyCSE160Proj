@@ -175,7 +175,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
       call periodicTimer.startPeriodic(5000);
-       call DVRTIMER.startPeriodic(5000);
+       call DVRTimer.startPeriodic(5000);
       
       //dbg(GENERAL_CHANNEL, "Booted\n");
    }
@@ -299,7 +299,7 @@ implementation{
          //dbg(ROUTING_CHANNEL, "hi");
      
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
-   }
+   
    }
    
    event void CommandHandler.printLinkState(){}
