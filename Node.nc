@@ -117,13 +117,12 @@ implementation{
         uint8_t newRoute[19][3];
         uint8_t currentRoute[19][3];
         RoutingTable updatedTable;
-        newRoutes = newPack.payload;                                            //not sure if this syntax is correct
+        //newRoutes = newPack.payload;                                            //not sure if this syntax is correct
         
         initTable();
         
         memcpy(currentRoute, newPack.payload, sizeof(newRoute));
-        memcpy(newRoute, RoutingTables[TOS_NODE_ID - 1].rTable, sizeof(currentRoute));
-        //printf("******************************************");
+       // memcpy(newRoute, RoutingTables[TOS_NODE_ID - 1].rTable, sizeof(currentRoute));
         for (i = 0; i < 19;  i++) {
             if (currentRoute[i][0] == newRoute[i][0]); {
                 if (newRoute[i][1] + 1 < currentRoute[i][1]) {                    //shorter route found
@@ -291,7 +290,7 @@ implementation{
        uint16_t max = 255;
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
-       
+       dbg
        
      
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
