@@ -48,7 +48,7 @@ implementation{
         uint16_t i,j,k;
         uint8_t currentRoute[19][3];
         
-        for (k = 0; k < 19; k++) {
+       // for (k = 0; k < 19; k++) {
         memcpy(currentRoute, RoutingTables[TOS_NODE_ID].rTable, sizeof(currentRoute));
         dbg(ROUTING_CHANNEL, "Table for Node: %u \n", TOS_NODE_ID);
         printf("DEST;COST;HOP\n");
@@ -64,8 +64,8 @@ implementation{
     void initTable() {
         uint16_t i, j, k, l, neighbor;
         uint8_t currentRoute[19][3];
-       for (k = 0; k < 19; k++) {
-        memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
+      // for (k = 0; k < 19; k++) {
+       // memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
         for (i = 0; i < 19; i++) {
             currentRoute[i][0] = i+1;
             for (j = 1; j < 3; j++) {
@@ -77,7 +77,7 @@ implementation{
                 currentRoute[i][2] = i+1;
             }
             //checks neighbors, sets cost to 1, hop to neighbor node
-            for (l = 0; l < 2; l++) {
+          /*  for (l = 0; l < 2; l++) {
              neighbor = call Neighbors.get(l);
              if (currentRoute.rTable[i][0] = neighbor) {
              currentRoute.rTable[i][1] = 1;
@@ -89,7 +89,7 @@ implementation{
         
         memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
         //}
-        printTable();
+        //printTable();
     }
     
     
@@ -108,7 +108,7 @@ implementation{
             
             for (i = 0; i < 2; i++) {
                 makePack(&sendPackage, j+1, call Neighbors.get(i), 1, 5, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
-                memcpy(&sendPackage->payload, call RoutingTables.get(i), sizeof(currentRoute));
+               // memcpy(&sendPackage->payload, call RoutingTables.get(i), sizeof(currentRoute));
                 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
             }
         }
@@ -120,7 +120,7 @@ implementation{
         uint8_t i;
         uint8_t newRoute[19][3];
         uint8_t currentRoute[19][3];
-        RoutingTable updatedTable;
+        //RoutingTable updatedTable;
         //newRoutes = newPack.payload;                                            //not sure if this syntax is correct
         
         initTable();
