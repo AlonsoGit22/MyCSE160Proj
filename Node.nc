@@ -290,15 +290,13 @@ implementation{
    }
 
    event void CommandHandler.printRouteTable(){
-       /uint16_t i = 0;
-       uint16_t max = 255;
+       //uint16_t i = 0;
+       //uint16_t max = 255;
        //dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-       dbg(ROUTING_CHANNEL, "max %d:\n" , max);  dbg(ROUTING_CHANNEL, "Routing Table \n");
+       dbg(ROUTING_CHANNEL, "max %d:\n" , max);
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
-       for(i = 0; i < max; i++){
         
-        dbg(ROUTING_CHANNEL, "hi");
      
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    
