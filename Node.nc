@@ -175,7 +175,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
       call periodicTimer.startPeriodic(5000);
-       call DVRTimer.startPeriodic(5000);
+       call DVRTimer.startPeriodic(6000);
       
       //dbg(GENERAL_CHANNEL, "Booted\n");
    }
