@@ -62,7 +62,7 @@ implementation{
     }
     
     void initTable() {
-        uint16_t i, j, k, l, Neighbor;
+        uint16_t i, j, k, l, neighbor;
         uint8_t currentRoute[19][3];
         //for (k = 0; k < 19; k++) {
         //memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
@@ -280,10 +280,11 @@ implementation{
        uint16_t max = call Neighbors.size();   
        
        for(i = 0; i < max;i++){
+           
            dbg(NEIGHBOR_CHANNEL,"i am printing\n");
-           uint16_t Neighbor = call Neighbors.get(i);
-           printf('%s', Neighbor);
-           dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+          // uint16_t Neighbor = call Neighbors.get(i);
+           //printf('%s', Neighbor);
+          // dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
 
        }
    }
