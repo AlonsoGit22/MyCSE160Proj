@@ -293,10 +293,10 @@ implementation{
        //uint16_t i = 0;
        //uint16_t max = 255;
        //dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-       dbg(ROUTING_CHANNEL, "max %d:\n" , max);
+      // dbg(ROUTING_CHANNEL, "max %d:\n" , max);
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
-        
+       
      
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
    
