@@ -111,13 +111,13 @@ implementation{
         
     }
     
-    void mergeRoute(pack newPack) {                                            //not sure if argument is correct
+    void mergeRoute(pack *newPack) {                                            //not sure if argument is correct
         
         uint8_t i;
         uint8_t newRoute[19][3];
         uint8_t currentRoute[19][3];
-        //RoutingTable updatedTable;
-        //newRoutes = newPack.payload;                                            //not sure if this syntax is correct
+        RoutingTable updatedTable;
+        newRoutes = newPack.payload;                                            //not sure if this syntax is correct
         
         initTable();
         
@@ -143,7 +143,7 @@ implementation{
                 }
             }
         }
-        //updatedTable = currentRoute;
+        updatedTable = currentRoute;
         memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
         printTable();
     }
