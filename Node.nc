@@ -48,7 +48,7 @@ implementation{
         uint16_t i,j,k;
         uint8_t currentRoute[19][3];
         
-        for (k = 0; k < 19; k++) {
+        //for (k = 0; k < 19; k++) {
         memcpy(currentRoute, RoutingTables[TOS_NODE_ID].rTable, sizeof(currentRoute));
         dbg(ROUTING_CHANNEL, "Table for Node: %u \n", TOS_NODE_ID);
         printf("DEST;COST;HOP\n");
@@ -290,12 +290,18 @@ implementation{
    }
 
    event void CommandHandler.printRouteTable(){
-       //uint16_t i = 0;
-       //uint16_t max = 255;
+       uint16_t i = 0;
+       uint16_t max = 255;
        //dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
       // dbg(ROUTING_CHANNEL, "max %d:\n" , max);
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
+       for (i = 0; i < 19; i++){
+           for (j = 0; j < 3; j++) {
+               dbg(ROUTING_CHANNEL,"%u; ", currentRoute[i][j]);
+           }
+           printf("\n");
+       }
        
      
         //dbg(ROUTING_CHANNEL, call routingTable.get(dest)," ", call routingTable.get(NextHop), "  ",call routingTable.get(cost));
