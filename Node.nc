@@ -64,8 +64,8 @@ implementation{
     void initTable() {
         uint16_t i, j, k, l, neighbor;
         uint8_t currentRoute[19][3];
-      // for (k = 0; k < 19; k++) {
-       // memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
+       for (k = 0; k < 19; k++) {
+        memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
         for (i = 0; i < 19; i++) {
             currentRoute[i][0] = i+1;
             for (j = 1; j < 3; j++) {
@@ -88,8 +88,8 @@ implementation{
         }
         
         memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
-        //}
-        //printTable();
+        }
+        printTable();
     }
     
     void sendDVRTable() {                                                                    //sends current routing table to the neighbors
