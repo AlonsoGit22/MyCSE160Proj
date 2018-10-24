@@ -15,6 +15,11 @@
 #define MAX_ROUTES 128
 #define MAX_TTL 120
 
+
+typedef nx_struct RoutingTable {
+nx_uint8_t rTable[19][3];
+} RoutingTable;
+
 module Node{
    uses interface Boot;
 
@@ -27,74 +32,130 @@ module Node{
    uses interface List<uint16_t> as Neighbors;
    uses interface List<pack> as Packets;
    uses interface Timer<TMilli> as periodicTimer;
+   uses interface Timer<TMilli> as DVRTimer;
 }
 
 implementation{
-   pack sendPackage;
-   uint16_t sequence = 0;
-
-    typedef nx_struct Route{
-        nx_uint16_t dest;
-        nx_uint16_t NextHop;
-        nx_uint16_t cost;        //Sequence Number
-        nx_uint8_t TTL;        //Time to Live
-       // nx_uint8_t protocol;
-        //nx_uint8_t payload[PACKET_MAX_PAYLOAD_SIZE];
-    }Route;
+    uint16_t SENTINEL = 65535;
+    uint16_t sequence = 0;
+    uint8_t neighborDiscovered = 0;
     
-    int numRoutes = 0;
-    Route routingTable[MAX_ROUTES];
-
-    void mergeRoute(Route *route){
-        int i;
-        for (i = 0; i < numRoutes; ++i)
-        {
-            if (route->dest == routingTable[i].dest)
-            {
-                if (route->cost + 1 < routingTable[i].cost)
-                {
-                    routingTable[i].cost = route->cost + 1;
-                } else if (route->NextHop == routingTable[i].NextHop) {
-                  
+    DVtable RoutingTables[20];
+    
+    
+    // Prototypes
+    
+    
+    
+    
+    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+    void printTable() {
+        uint16_t i,j,k;
+        uint8_t currentRoute[19][3];
+        
+        //for (k = 0; k < 19; k++) {
+        memcpy(currentRoute, RoutingTables[TOS_NODE_ID].rTable, sizeof(currentRoute));
+        dbg(ROUTING_CHANNEL, "Table for Node: %u \n", TOS_NODE_ID);
+        printf("DEST;COST;HOP\n");
+        for (i = 0; i < 19; i++){
+            for (j = 0; j < 3; j++) {
+                printf("%u; ", currentRoute[i][j]);
+            }
+            printf("\n");
+        }
+        //}
+    }
+    
+    void initTable() {
+        uint16_t i, j, k, l, neighbor;
+        uint8_t currentRoute[19][3];
+        //for (k = 0; k < 19; k++) {
+        //memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
+        for (i = 0; i < 19; i++) {
+            currentRoute[i][0] = i+1;
+            for (j = 1; j < 3; j++) {
+                currentRoute[i][j] = SENTINEL;
+            }
+            //checks dest if itself, if it is, set cost to 0 and hop to itself.
+            if (currentRoute[i][0] == TOS_NODE_ID) {
+                currentRoute[i][1] = 0;
+                currentRoute[i][2] = i+1;
+            }
+            //checks neighbors, sets cost to 1, hop to neighbor node
+            /*for (l = 0; l < 2; l++) {
+             neighbor = call Neighbors.get(l);
+             if (currentRoute.rTable[i][0] = neighbor) {
+             currentRoute.rTable[i][1] = 1;
+             currentRoute.rTable[i][2] = neighbor;
+             }
+             }
+             */
+        }
+        
+        memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
+        //}
+        //printTable();
+    }
+    
+    
+    
+    
+    
+    void sendDVRTable() {                                                                    //sends current routing table to the neighbors
+        
+        //put a for loop in here to make sure it sends to all neighbors
+        uint16_t i, j;
+        uint8_t* payload;
+        uint8_t currentRoute[19][3];
+        for (j = 0; j < 19; j++) {
+            memcpy(currentRoute, RoutingTables[j].rTable, sizeof(currentRoute));
+            payload = (uint8_t*) currentRoute;
+            
+            for (i = 0; i < 2; i++) {
+                makePack(&sendPackage, j+1, call Neighbors.get(i), 1, 5, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+                //memcpy(&sendPackage->payload, call RoutingTables.get(i), sizeof(currentRoute));
+                call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+            }
+        }
+        
+    }
+    
+    void mergeRoute(pack newPack) {                                            //not sure if argument is correct
+        
+        uint8_t i;
+        uint8_t newRoute[19][3];
+        uint8_t currentRoute[19][3];
+        //DVtable updatedTable;
+        //newRoutes = newPack.payload;                                            //not sure if this syntax is correct
+        
+        initTable();
+        
+        memcpy(currentRoute, newPack.payload, sizeof(newRoute));
+        memcpy(newRoute, RoutingTables[TOS_NODE_ID - 1].rTable, sizeof(currentRoute));
+        //printf("******************************************");
+        for (i = 0; i < 19;  i++) {
+            if (currentRoute[i][0] == newRoute[i][0]); {
+                if (newRoute[i][1] + 1 < currentRoute[i][1]) {                    //shorter route found
+                    currentRoute[i][1] = (newRoute[i][1] + 1);
+                    currentRoute[i][2] = TOS_NODE_ID - 1;                            //hopefully this is correct lmfao
                 }
             }
-        } else {
-            /* route is uninteresting---just ignore
-             it */
-            return; }
-        if (i == numRoutes)
-        {
-            /* this is a completely new route; is there room
-             for it? */
-            if (numRoutes < MAXROUTES)
-            {
-                ++numRoutes;
-            } else {
-                /* can't fit this route in table so give up */
-                return; }
+            
+            //    if (currentRoute.rTable[i][1] == SENTINEL && newRoutes[i][1] != SENTINEL) {            //new route has been found
+            //    currentRoute.rTable[i][1] = (newRoutes[i][1] + 1);
+            //currentRoute.rTable[i][2] = newPack.src;
+            //}
+            
+            if (currentRoute[i][0] == newRoute[i][0]); {
+                if (newRoute[i][1] + 1 > currentRoute[i][1]) {                    //route is longer than the current route
+                    break;
+                }
+            }
         }
-        routingTable[i] = *route;
-        /* reset TTL */
-        routingTable[i].TTL = MAX_TTL;
-        /* account for hop to get to next node */
-        ++routingTable[i].Cost;
+        //updatedTable = currentRoute;
+        memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
+        printTable();
     }
-    
-    void
-    updateRoutingTable (Route *newRoute, int numNewRoutes){
-        int i;
-        for (i=0; i < numNewRoutes; ++i)
-        {
-            mergeRoute(&newRoute[i]);
-        }
-    }
-    
-struct fowardingTable {
-    nx_uint16_t dest;
-    nx_uint16_t NextHop;
-    nx_uint16_t cost;        //Sequence Number
-    nx_uint8_t TTL;
-};
 
     
     
@@ -268,6 +329,7 @@ struct fowardingTable {
       Package->TTL = TTL;
       Package->seq = seq;
       Package->protocol = protocol;
+       Package-> route;
       memcpy(Package->payload, payload, length);
    }
    
