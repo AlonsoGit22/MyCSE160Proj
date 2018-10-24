@@ -58,7 +58,7 @@ implementation{
             }
             printf("\n");
         }
-        //}
+        }
     }
     
     void initTable() {
@@ -278,9 +278,9 @@ implementation{
        for(i = 0; i < max;i++){
            
           dbg(NEIGHBOR_CHANNEL,"i am printing\n");
-          uint16_t Neighbor = call Neighbors.get(i);
-           printf('%s', Neighbor);
-          dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+         // uint16_t Neighbor = call Neighbors.get(i);
+           //printf('%s', Neighbor);
+          //dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
 
        }
    }
