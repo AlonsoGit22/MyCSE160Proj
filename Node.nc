@@ -62,7 +62,7 @@ implementation{
     }
     
     void initTable() {
-        uint16_t i, j, k, l, neighbor;
+        uint16_t i, j, k, l, Neighbor;
         uint8_t currentRoute[19][3];
         //for (k = 0; k < 19; k++) {
         //memcpy(currentRoute, RoutingTables[k].rTable, sizeof(currentRoute));
@@ -327,7 +327,6 @@ implementation{
       Package->TTL = TTL;
       Package->seq = seq;
       Package->protocol = protocol;
-       Package-> route;
       memcpy(Package->payload, payload, length);
    }
    
