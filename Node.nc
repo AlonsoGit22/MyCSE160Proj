@@ -291,14 +291,15 @@ implementation{
 
    event void CommandHandler.printRouteTable(){
        uint16_t i = 0;
+       uint16_t j = 0;
        uint16_t max = 255;
-       //dbg(ROUTING_CHANNEL, "+++++++++++i'm HERE +++++++++++++++++=");
-      // dbg(ROUTING_CHANNEL, "max %d:\n" , max);
        dbg(ROUTING_CHANNEL, "Routing Table \n");
        dbg(ROUTING_CHANNEL, "Dest   Hop    Count \n");
        for (i = 0; i < 19; i++){
            for (j = 0; j < 3; j++) {
-               dbg(ROUTING_CHANNEL,"%u; ", currentRoute[i][j]);
+               uint8_t currentRoute = call rTable.get(i,j);
+               printf("%u; ", currentRoute[i][j]);
+               dbg(ROUTING_CHANNEL," DEST   Hop     Count%u; ", currentRoute);
            }
            printf("\n");
        }
