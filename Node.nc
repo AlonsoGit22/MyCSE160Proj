@@ -142,7 +142,7 @@ implementation{
                 }
             }
         }
-        updatedTable = currentRoute;
+        //updatedTable = currentRoute;
         memcpy(RoutingTables[TOS_NODE_ID].rTable, currentRoute, sizeof(currentRoute));
         printTable();
     }
