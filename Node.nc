@@ -48,10 +48,10 @@ implementation{
         uint16_t i,j,k;
         uint8_t currentRoute[19][3];
         
-       // for (k = 0; k < 19; k++) {
+       for (k = 0; k < 19; k++) {
         memcpy(currentRoute, RoutingTables[TOS_NODE_ID].rTable, sizeof(currentRoute));
         dbg(ROUTING_CHANNEL, "Table for Node: %u \n", TOS_NODE_ID);
-        printf("DEST;COST;HOP\n");
+        printf("DEST    COST    HOP\n");
         for (i = 0; i < 19; i++){
             for (j = 0; j < 3; j++) {
                 printf("%u; ", currentRoute[i][j]);
@@ -91,10 +91,6 @@ implementation{
         //}
         //printTable();
     }
-    
-    
-    
-    
     
     void sendDVRTable() {                                                                    //sends current routing table to the neighbors
         
@@ -281,10 +277,10 @@ implementation{
        
        for(i = 0; i < max;i++){
            
-          // dbg(NEIGHBOR_CHANNEL,"i am printing\n");
-          // uint16_t Neighbor = call Neighbors.get(i);
-           //printf('%s', Neighbor);
-          // dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
+          dbg(NEIGHBOR_CHANNEL,"i am printing\n");
+          uint16_t Neighbor = call Neighbors.get(i);
+           printf('%s', Neighbor);
+          dbg(NEIGHBOR_CHANNEL,"Neighboring nodes %s\n", Neighbor);
 
        }
    }
