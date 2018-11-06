@@ -119,6 +119,15 @@ class TestSim:
     def ping(self, source, dest, msg):
         self.sendCMD(self.CMD_PING, source, "{0}{1}".format(chr(dest),msg));
 
+    def newServer(self, target, destination);
+        self.sendCMD(self.CMD_TEST_SERVER, target, "{0}".format(chr(port)));
+            
+    def newClient(self, target, dest, srcPort, destPort, num):
+            self.sendCMD(self.CMD_TEST_CLIENT, target, "{0}{1}{2}{3}{4}".format(chr(dest), chr(srcPort), chr(num & 0xFF), chr((num >> 8) & 0xFF)))
+                         
+    def clientClose(self, target, dest, srcPort, destPort):
+            self.sendCMD(self.CMD_CLOSE_CONNECTION, target,"{0}{1}{2}".format(chr(dest), chr(srcPort), chr(destPort)))
+    
     def neighborDMP(self, destination):
         self.sendCMD(self.CMD_NEIGHBOR_DUMP, destination, "neighbor command");
 

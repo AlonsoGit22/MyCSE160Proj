@@ -11,22 +11,12 @@
 #include "includes/CommandMsg.h"
 #include "includes/packet.h"
 
-configuration NodeC{
+configuration NodeC {
 }
 implementation {
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
-    components new ListC(pack, 64);
-    components new ListC(uint16_t, 64) as Neighbors;
-    components new TimerMilliC() as myTimerC; //create a new timer with alias “myTimerC”
-    components new TimerMilliC() as dvrTimerC;
-
-    Node.Boot -> MainC.Boot;
-    Node.periodicTimer -> myTimerC; //Wire the interface to the component
-    Node.DVRTimer -> dvrTimerC;
-    Node.Neighbors -> Neighbors;
-    Node.Packets -> ListC;
 
     Node -> MainC.Boot;
 
@@ -34,10 +24,16 @@ implementation {
 
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
-
-    components new SimpleSendC(AM_PACK);
-    Node.Sender -> SimpleSendC;
-
+    
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
+
+    components FloodingC;
+    Node.Flooding -> FloodingC;
+
+    components NeighborDiscoveryC;
+    Node.NeighborDiscovery -> NeighborDiscoveryC;
+
+    components DistanceVectorRoutingC;
+    Node.DistanceVectorRouting -> DistanceVectorRoutingC;
 }
